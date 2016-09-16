@@ -2,8 +2,8 @@ class Consty
   
   VERSION = '0.1.0'
 
-  def self.get(name, namespace=nil)
-    current_namespace = namespace || Object
+  def self.get(name, namespace=Object)
+    current_namespace = namespace
     while current_namespace do
       begin
         return current_namespace.const_get(name.to_s)
