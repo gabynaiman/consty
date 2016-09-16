@@ -1,9 +1,5 @@
-# require 'coverage_helper'
-
-require 'simplecov'
-SimpleCov.start
-
+require 'coverage_helper'
+require 'minitest/autorun'
 require 'minitest/colorin'
 require 'pry-nav'
 require 'consty'
-require 'minitest/autorun'
