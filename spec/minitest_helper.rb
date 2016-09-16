@@ -1,0 +1,5 @@
+require 'coverage_helper'
+require 'consty'
+require 'minitest/autorun'
+require 'minitest/colorin'
+require 'pry-nav'
