@@ -1,12 +1,12 @@
 require 'minitest_helper'
 
-VAL = 0
+VAL = 1
 
 module Foo
-  VAL = 1
+  VAL = 2
 
   class Bar
-    VAL = 10
+    VAL = 3
 
     def self.const_missing(name)
       name.to_s == 'Const' ? Baz : super
