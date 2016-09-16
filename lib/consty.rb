@@ -1,7 +1,7 @@
+require_relative 'consty/version'
+
 class Consty
   
-  VERSION = '0.1.0'
-
   class << self
 
     def get(name, namespace=Object)
