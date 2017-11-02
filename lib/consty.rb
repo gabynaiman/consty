@@ -26,8 +26,15 @@ class Consty
         namespace = Object 
         name_sections = name_sections[1..-1]
       end
+      
+      name_sections.inject(namespace) do |namespace, section|
+        if namespace.constants.include?(section.to_sym)
+          namespace.const_get section
+        else
+          namespace.const_missing section
+        end
+      end
 
-      name_sections.inject(namespace) { |c,n| c.const_get n }
     end
 
   end
