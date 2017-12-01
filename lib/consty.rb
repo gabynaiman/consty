@@ -7,11 +7,17 @@ class Consty
     def get(name, namespace=Object)
       current_namespace = namespace
       while current_namespace do
-       begin
-         return secuential_get name, current_namespace
-       rescue NameError
-         namespace_name = current_namespace.name.split('::')[0..-2].join('::')
-         current_namespace = namespace_name.empty? ? nil : secuential_get(namespace_name)
+        begin
+          return secuential_get name, current_namespace
+        rescue NameError
+          namespace_name = current_namespace.name.split('::')[0..-2].join('::')
+          if !namespace_name.empty?
+            current_namespace = secuential_get namespace_name
+          elsif current_namespace != Object
+            current_namespace = Object
+          else
+            current_namespace = nil
+          end
         end
       end
       namespace.const_missing name
@@ -27,11 +33,11 @@ class Consty
         name_sections = name_sections[1..-1]
       end
       
-      name_sections.inject(namespace) do |namespace, section|
-        if namespace.constants.include?(section.to_sym)
-          namespace.const_get section
+      name_sections.inject(namespace) do |scope, section|
+        if scope.constants.include?(section.to_sym)
+          scope.const_get section
         else
-          namespace.const_missing section
+          scope.const_missing section
         end
       end
 

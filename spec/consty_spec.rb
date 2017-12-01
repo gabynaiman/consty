@@ -1,5 +1,6 @@
 require 'minitest_helper'
 
+ROOT = 0
 VAL = 1
 
 module Foo
@@ -28,6 +29,7 @@ describe Consty do
   describe 'Unscoped' do
   
     it 'Get from string' do
+      Consty.get('ROOT').must_equal ROOT
       Consty.get('VAL').must_equal VAL
       Consty.get('Foo').must_equal Foo
       Consty.get('Foo::VAL').must_equal Foo::VAL
@@ -37,6 +39,7 @@ describe Consty do
     end
 
     it 'Get from symbol' do
+      Consty.get('ROOT'.to_sym).must_equal ROOT
       Consty.get('VAL'.to_sym).must_equal VAL
       Consty.get('Foo'.to_sym).must_equal Foo
       Consty.get('Foo::VAL'.to_sym).must_equal Foo::VAL
@@ -46,6 +49,8 @@ describe Consty do
     end
 
     it 'Explicit :: prefix (::SomeClass)' do
+      Consty.get('::ROOT').must_equal ROOT
+      Consty.get('::VAL').must_equal VAL
       Consty.get('::Foo').must_equal Foo
       Consty.get('::Foo::Bar').must_equal Foo::Bar
       Consty.get('::Foo::Bar::VAL').must_equal Foo::Bar::VAL
@@ -65,17 +70,20 @@ describe Consty do
   describe 'Namespace scoped' do
 
     it 'Get closest constant' do
+      Consty.get('ROOT', Foo).must_equal ROOT
       Consty.get('VAL', Foo).must_equal Foo::VAL
       Consty.get('Bar', Foo).must_equal Foo::Bar
       Consty.get('Bar::VAL', Foo).must_equal Foo::Bar::VAL
       Consty.get('Baz::VAL', Foo).must_equal Foo::Bar::VAL
       Consty.get('VAL', Foo::Bar).must_equal Foo::Bar::VAL
+      Consty.get('VAL', Foo::Baz).must_equal Foo::Bar::VAL
       Consty.get('Bar', Foo::Baz).must_equal Foo::Bar
       Consty.get('VAL', Foo::Bar::Qux).must_equal Foo::Bar::VAL
       Consty.get('VAL', Foo::Baz::Qux).must_equal Foo::Bar::VAL
     end
 
     it 'Explicit :: prefix (::SomeClass)' do
+      Consty.get('::ROOT', Foo).must_equal ROOT
       Consty.get('::VAL', Foo).must_equal VAL
       Consty.get('::VAL', Foo::Bar).must_equal VAL
     end
@@ -92,6 +100,7 @@ describe Consty do
     end
 
     it 'Ignore top level defined constant' do
+      proc { Consty.get('Foo::ROOT') }.must_raise NameError
       proc { Consty.get('Foo::Bar::Qux::VAL') }.must_raise NameError
       proc { Consty.get('Foo::Baz::Qux::VAL') }.must_raise NameError
       proc { Consty.get('Bar::Qux::VAL', Foo) }.must_raise NameError
