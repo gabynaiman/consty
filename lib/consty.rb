@@ -10,7 +10,7 @@ class Consty
         begin
           return secuential_get name, current_namespace
         rescue NameError
-          namespace_name = current_namespace.name.split('::')[0..-2].join('::')
+          namespace_name = current_namespace.name ? current_namespace.name.split('::')[0..-2].join('::') : ''
           if !namespace_name.empty?
             current_namespace = secuential_get namespace_name
           elsif current_namespace != Object
